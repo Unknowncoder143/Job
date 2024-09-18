@@ -54,7 +54,6 @@ const map = L.map('map', {
 
     // Fetch the JSON data from Google Sheets adding status mark 
 fetch('https://docs.google.com/spreadsheets/d/1ajnO27PRxnHSQiRhyVpukeir-zqTcUfK7F_kfM1nfkc/gviz/tq?tqx=out:json')
-fetch('https://docs.google.com/spreadsheets/d/1ajnO27PRxnHSQiRhyVpukeir-zqTcUfK7F_kfM1nfkc/gviz/tq?tqx=out:json')
   .then(response => response.text())
   .then(text => {
     console.log('Raw response:', text); // Log raw response
