@@ -52,6 +52,40 @@ const map = L.map('map', {
 
 
 
+
+       // Fetch the JSON data from Google Sheets
+    fetch('https://docs.google.com/spreadsheets/d/1ajnO27PRxnHSQiRhyVpukeir-zqTcUfK7F_kfM1nfkc/gviz/tq?tqx=out:json')
+      .then(response => response.text())
+      .then(text => {
+        // Parse the JSON data
+        const json = JSON.parse(text.substring(47).slice(0, -2)); // Remove callback function and trailing })
+        const rows = json.table.rows;
+
+        // Loop through the rows and add markers
+        rows.forEach(row => {
+          const timestamp = row.c[0] ? row.c[0].v : ''; // Timestamp
+          const title = row.c[1] ? row.c[1].v : ''; // Title
+          const description = row.c[2] ? row.c[2].v : ''; // Description
+          const lat = parseFloat(row.c[3].v); // Latitude
+          const lng = parseFloat(row.c[4].v); // Longitude
+          const imageUrl = row.c[5] ? row.c[5].v : ''; // Image URL
+
+          if (!isNaN(lat) && !isNaN(lng)) {
+            const popupContent = `
+              <div class="popup-content">
+                <h4>${title}</h4>
+                <p>${description}</p>
+                ${imageUrl ? `<img src="${imageUrl}" alt="Image" style="width: 100px;">` : ''}
+                <p><strong>Timestamp:</strong> ${timestamp}</p>
+              </div>
+            `;
+            L.marker([lat, lng]).addTo(map).bindPopup(popupContent);
+          }
+        });
+      })
+      .catch(error => console.error('Error fetching data:', error));
+
+
     // Fetch the JSON data from Google Sheets adding status mark 
 fetch('https://docs.google.com/spreadsheets/d/15lS6FEOSuQT2ykKbUaEUjjEi9eKeqJYlsWaIX640YGQ/gviz/tq?tqx=out:json')
   .then(response => response.text())
